@@ -305,7 +305,6 @@
             </div>
             <div class="bg-brand-card border border-slate-700 rounded-2xl p-6 md:p-10 animate-on-scroll shadow-2xl">
                 <form id="contact-form" action="//formspree.io/f/mgorobdl" method="POST" class="space-y-6">
-                    <input type="hidden" name="_next" value="https://www.talisautorepair.com">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="col-span-1 md:col-span-2">
                             <label class="block text-sm font-medium text-slate-300 mb-2">Service Needed *</label>
@@ -405,7 +404,7 @@
                                 <h4 class="text-white font-medium mb-1">Business Hours</h4>
                                 <ul class="text-slate-400 text-sm space-y-1">
                                     <li class="flex justify-between w-48"><span>Mon - Fri:</span><span>8:00 AM - 6:00 PM</span></li>
-                                    <li class="flex justify-between w-48"><span>Saturday:</span><span>By Appointment</span></li>
+                                    <li class="flex justify-between w-48"><span>Saturday:</span><span>8:00 AM - 4:00 PM</span></li>
                                     <li class="flex justify-between w-48 text-slate-500"><span>Sunday:</span><span>Closed</span></li>
                                 </ul>
                             </div>
@@ -464,7 +463,8 @@
         const SUPABASE_URL = 'https://zgnpmogdjnnhpwewavnr.supabase.co';
         const PROJECT_ID   = 'zgnpmogdjnnhpwewavnr';
         const SLOT_START   = 8 * 60;        // 8:00 AM in minutes
-        const SLOT_END     = 17 * 60 + 30;  // 5:30 PM last slot
+        const SLOT_END     = 17 * 60 + 30;  // 5:30 PM last slot (Mon-Fri)
+        const SAT_SLOT_END = 15 * 60 + 30;  // 3:30 PM last slot (Saturday)
 
         function todayISO() {
             const d = new Date();
@@ -515,10 +515,15 @@
             ph.textContent = 'Select a time…';
             sel.appendChild(ph);
 
+            const isSat = new Date(dateStr + 'T12:00:00').getDay() === 6;
+            const maxSlot = isSat ? SAT_SLOT_END : SLOT_END;
+
             let shown = 0;
             for (const { value, label } of ALL_SLOTS) {
                 const [h, m] = value.split(':').map(Number);
-                if (isToday && (h * 60 + m) <= nowMins) continue; // skip past slots
+                const mins = h * 60 + m;
+                if (mins > maxSlot) continue;                     // skip slots after closing
+                if (isToday && mins <= nowMins) continue;         // skip past slots
                 shown++;
                 const opt = document.createElement('option');
                 opt.value = value;
@@ -545,60 +550,65 @@
             if (e.target.value) populateTimeSelect(e.target.value);
         });
 
-        // AJAX submit to Formspree with Sunday + date/time validation
-        document.getElementById('contact-form').addEventListener('submit', async e => {
+        // Submit via Formspree AJAX — stay on page, show inline confirmation
+        const contactForm = document.getElementById('contact-form');
+        const formStatus  = document.getElementById('form-status');
+        const submitBtn   = document.getElementById('submit-btn');
+
+        contactForm.addEventListener('submit', async e => {
             e.preventDefault();
-            const form = e.target;
-            const status = document.getElementById('form-status');
             const dateVal = document.getElementById('date-input').value;
-            const timeVal = document.getElementById('time-select').value;
 
+            // Validate: date present and not in the past
             if (!dateVal || dateVal < todayISO()) {
-                status.innerHTML = '<span class="text-red-400">Por favor selecciona una fecha válida (hoy o posterior).</span>';
+                formStatus.innerHTML = '<span class="text-red-400">Please select a valid date (today or later).</span>';
+                return;
+            }
+            // Block Sundays (getDay() === 0); use noon to avoid UTC-offset issues
+            if (new Date(dateVal + 'T12:00:00').getDay() === 0) {
+                formStatus.innerHTML = '<span class="text-red-400">We are closed on Sundays. Please choose another day.</span>';
+                return;
+            }
+            // Validate time slot selected
+            if (!document.getElementById('time-select').value) {
+                formStatus.innerHTML = '<span class="text-red-400">Please select an appointment time.</span>';
                 return;
             }
 
-            const selected = new Date(dateVal + 'T00:00:00');
-            if (selected.getDay() === 0) {
-                status.innerHTML = '<span class="text-red-400">No aceptamos citas los domingos. Por favor elige otro día.</span>';
-                return;
-            }
-
-            if (!timeVal) {
-                status.innerHTML = '<span class="text-red-400">Por favor selecciona un horario.</span>';
-                return;
-            }
-
-            const btn = document.getElementById('submit-btn');
-            btn.disabled = true;
-            btn.textContent = 'Enviando…';
-            status.innerHTML = '';
+            const originalHTML = submitBtn.innerHTML;
+            submitBtn.innerHTML = 'Sending…';
+            submitBtn.disabled = true;
+            formStatus.innerHTML = '';
 
             try {
                 const res = await fetch('https://formspree.io/f/mgorobdl', {
                     method: 'POST',
                     headers: { 'Accept': 'application/json' },
-                    body: new FormData(form)
+                    body: new FormData(contactForm)
                 });
-
                 if (res.ok) {
-                    form.innerHTML = `<div style="text-align:center; padding: 40px 20px;">
-  <div style="font-size: 48px; margin-bottom: 16px;">✅</div>
-  <h3 style="color: #16a34a; font-size: 22px; margin-bottom: 8px;">¡Tu cita fue creada exitosamente!</h3>
-  <p style="color: #4b5563; font-size: 15px;">Te contactaremos pronto para confirmar tu cita.<br>¡Gracias por elegir Tali's Auto Repair!</p>
-</div>`;
+                    formStatus.innerHTML = `
+                        <div class="flex items-start gap-3 p-4 bg-green-900/20 border border-green-700/40 rounded-lg text-left mt-2">
+                            <span class="text-green-400 text-lg leading-none flex-shrink-0">✅</span>
+                            <div>
+                                <p class="text-green-400 font-semibold">¡Tu cita fue creada exitosamente!</p>
+                                <p class="text-slate-400 text-sm mt-1">Te contactaremos para confirmarla.</p>
+                            </div>
+                        </div>`;
+                    contactForm.reset();
+                    const sel = document.getElementById('time-select');
+                    sel.innerHTML = '<option value="" disabled selected>Select a date first…</option>';
+                    sel.disabled = true;
                 } else {
                     const data = await res.json().catch(() => ({}));
-                    const msg = data.errors?.map(err => err.message).join(', ') || 'Ocurrió un error. Por favor intenta de nuevo.';
-                    status.innerHTML = `<span class="text-red-400">${msg}</span>`;
-                    btn.disabled = false;
-                    btn.innerHTML = '<i data-lucide="calendar-check" class="w-5 h-5"></i> Request Appointment';
-                    lucide.createIcons();
+                    const msg = data.errors?.map(err => err.message).join(', ') || 'Something went wrong.';
+                    formStatus.innerHTML = `<span class="text-red-400">${msg} Please call us at 608-520-9750.</span>`;
                 }
             } catch {
-                status.innerHTML = '<span class="text-red-400">Error de conexión. Por favor verifica tu internet e intenta de nuevo.</span>';
-                btn.disabled = false;
-                btn.innerHTML = '<i data-lucide="calendar-check" class="w-5 h-5"></i> Request Appointment';
+                formStatus.innerHTML = '<span class="text-red-400">Network error. Please call us at 608-520-9750.</span>';
+            } finally {
+                submitBtn.innerHTML = originalHTML;
+                submitBtn.disabled = false;
                 lucide.createIcons();
             }
         });
