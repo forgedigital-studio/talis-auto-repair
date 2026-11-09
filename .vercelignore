@@ -1,0 +1,18 @@
+# Files kept in the repo but NOT published.
+# Vercel's outputDirectory is ".", so anything here would otherwise be
+# downloadable from talisautorepair.com.
+
+deploy.sh
+.DS_Store
+
+# original/unused source art — the site serves the WebP versions in images/
+Captura de pantalla 2026-04-03 a la(s) 11.34.31.png
+ChatGPT Image 3 abr 2026, 10_51_02 a.m..png
+ChatGPT Image 3 abr 2026, 10_54_38 a.m..png
+Guerrero sobre llanta de reparación.png
+Logo de reparación automotriz Tali.png
+Logo de Tali's Auto Repair.png
+Logo de taller automotriz Tali's.png
+Logo detallado de Tali's Auto Repair.png
+Reparación de camioneta Ford en taller.png
+images/logo.png
