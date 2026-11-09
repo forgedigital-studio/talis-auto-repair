@@ -16,9 +16,9 @@
     <meta name="twitter:url" content="https://www.talisautorepair.com/">
     <meta name="twitter:title" content="Tali's Auto Repair | Professional Auto Service in Madison, WI">
     <meta name="twitter:description" content="Professional auto repair in Madison, WI specializing in mufflers, exhaust systems, suspension, and brakes. Clean, organized, and trustworthy service.">
-    <meta property="og:image" content="https://zgnpmogdjnnhpwewavnr.supabase.co/storage/v1/object/public/project-images/28a4057e-8883-43b2-b824-ba922e227604/1773261450938-8j8vz.png">
+    <meta property="og:image" content="https://www.talisautorepair.com/images/shop-hero.webp">
     <meta property="og:image:alt" content="Inside Tali's Auto Repair in Madison, Wisconsin">
-    <meta name="twitter:image" content="https://zgnpmogdjnnhpwewavnr.supabase.co/storage/v1/object/public/project-images/28a4057e-8883-43b2-b824-ba922e227604/1773261450938-8j8vz.png">
+    <meta name="twitter:image" content="https://www.talisautorepair.com/images/shop-hero.webp">
     <meta property="og:locale" content="en_US">
     <meta property="og:site_name" content="Tali's Auto Repair">
 
@@ -32,7 +32,7 @@
       "name": "Tali's Auto Repair",
       "url": "https://www.talisautorepair.com/",
       "telephone": "+1-608-520-9750",
-      "image": "https://zgnpmogdjnnhpwewavnr.supabase.co/storage/v1/object/public/project-images/28a4057e-8883-43b2-b824-ba922e227604/1773261450938-8j8vz.png",
+      "image": "https://www.talisautorepair.com/images/shop-hero.webp",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "915 Stewart St",
@@ -65,6 +65,10 @@
       ]
     }
     </script>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#0f172a">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -110,6 +114,12 @@
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        /* room for the fixed mobile action bar */
+        @media (max-width: 767px) { body { padding-bottom: 5.5rem; } }
+        @media (prefers-reduced-motion: reduce) {
+            .animate-on-scroll { opacity: 1 !important; transform: none !important; transition: none !important; }
+            html { scroll-behavior: auto; }
+        }
     </style>
 </head>
 <body class="font-sans antialiased selection:bg-brand-accent selection:text-white">
@@ -122,11 +132,10 @@
             <div class="flex items-center h-20 relative">
                 <!-- Logo (left) -->
                 <a href="/" class="flex-shrink-0 flex items-center gap-3 cursor-pointer">
-                    <!-- LOGO: cambia "images/logo.png" por tu imagen -->
                     <img
-                        src="images/logo.png"
+                        src="images/logo.webp"
                         alt="Tali's Auto Repair Logo"
-                        width="1024" height="1536"
+                        width="240" height="360"
                         class="h-10 w-auto object-contain"
                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                     />
@@ -139,6 +148,7 @@
                 <div class="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-1">
                     <a href="#services" class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-md transition-all duration-200 tracking-wide text-center">Services</a>
                     <a href="#why-us" class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-md transition-all duration-200 tracking-wide text-center">Why Us</a>
+                    <a href="#reviews" class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-md transition-all duration-200 tracking-wide text-center">Reviews</a>
                     <a href="#photos" class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-md transition-all duration-200 tracking-wide text-center">Inside the Shop</a>
                     <a href="#location" class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-md transition-all duration-200 tracking-wide text-center">Location</a>
                 </div>
@@ -146,6 +156,24 @@
                 <div class="hidden md:flex ml-auto">
                     <a href="#booking" class="px-5 py-2.5 bg-brand-accent hover:bg-brand-accentHover text-white text-sm font-semibold rounded transition-colors shadow-lg shadow-red-900/30">Book Appointment</a>
                 </div>
+                <!-- Mobile menu toggle: without this the nav links above are simply
+                     unreachable on a phone, which is most of the shop's traffic. -->
+                <button id="menu-toggle" type="button"
+                    class="md:hidden ml-auto inline-flex items-center justify-center w-11 h-11 rounded-md text-slate-200 hover:text-white hover:bg-slate-800/60 transition-colors"
+                    aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+                    <i data-lucide="menu" class="w-6 h-6 pointer-events-none"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile menu panel -->
+        <div id="mobile-menu" class="md:hidden hidden border-t border-slate-800 bg-brand-dark/98 backdrop-blur-md">
+            <div class="px-6 py-4 space-y-1">
+                <a href="#services" class="block px-3 py-3 text-base font-medium text-slate-200 hover:text-white hover:bg-slate-800/60 rounded-md transition-colors">Services</a>
+                <a href="#why-us"   class="block px-3 py-3 text-base font-medium text-slate-200 hover:text-white hover:bg-slate-800/60 rounded-md transition-colors">Why Us</a>
+                <a href="#reviews"  class="block px-3 py-3 text-base font-medium text-slate-200 hover:text-white hover:bg-slate-800/60 rounded-md transition-colors">Reviews</a>
+                <a href="#photos"   class="block px-3 py-3 text-base font-medium text-slate-200 hover:text-white hover:bg-slate-800/60 rounded-md transition-colors">Inside the Shop</a>
+                <a href="#location" class="block px-3 py-3 text-base font-medium text-slate-200 hover:text-white hover:bg-slate-800/60 rounded-md transition-colors">Location</a>
+                <a href="#booking"  class="block mt-3 px-3 py-3 bg-brand-accent hover:bg-brand-accentHover text-white text-base font-semibold rounded-md text-center transition-colors">Book Appointment</a>
             </div>
         </div>
     </nav>
@@ -153,27 +181,36 @@
     <!-- HERO -->
     <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <!-- VIDEO HERO: reemplaza "images/hero-video.mp4" con tu video del taller -->
-            <video
-                autoplay
-                muted
-                loop
-                playsinline
+            <!-- Static backdrop for now. To use drone footage, drop the files into
+                 images/ and re-add <source> tags here — nothing else needs to change.
+                 (They were requested before the files existed, so every page load
+                 fired two 404s.) -->
+            <img
+                src="images/shop-hero.webp"
+                alt=""
+                width="1536" height="1024"
+                fetchpriority="high"
                 class="w-full h-full object-cover"
-                style="opacity: 0.35; mix-blend-mode: luminosity;"
-                poster="https://zgnpmogdjnnhpwewavnr.supabase.co/storage/v1/object/public/project-images/28a4057e-8883-43b2-b824-ba922e227604/1773261450938-8j8vz.png"
+                style="opacity: 0.28; mix-blend-mode: luminosity;"
             >
-                <source src="images/hero-video.mp4" type="video/mp4">
-                <source src="images/hero-video.webm" type="video/webm">
-                <!-- Fallback si no hay video -->
-                <img src="https://zgnpmogdjnnhpwewavnr.supabase.co/storage/v1/object/public/project-images/28a4057e-8883-43b2-b824-ba922e227604/1773261450938-8j8vz.png" alt="Auto Shop Background" class="w-full h-full object-cover">
-            </video>
-            <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/70 to-brand-dark/30"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/85 to-brand-dark/60"></div>
         </div>
         <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 text-center">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-sm font-medium text-slate-300 mb-8 animate-on-scroll">
-                <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                Accepting New Appointments
+            <!-- Real Google rating. Shown visually and linked to the listing; NOT
+                 marked up as aggregateRating, because Google disallows schema markup
+                 of reviews you don't host and can penalise it. -->
+            <div class="flex flex-wrap items-center justify-center gap-3 mb-8 animate-on-scroll">
+                <a href="https://www.google.com/maps/place/?q=place_id:ChIJ2YaQEABTBogRD-cDQ3hDd5Y"
+                   target="_blank" rel="noopener"
+                   class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/90 border border-slate-700 hover:border-amber-500/60 text-sm font-medium text-slate-200 transition-colors">
+                    <span class="text-amber-400 tracking-tight" aria-hidden="true">★★★★★</span>
+                    <span class="font-semibold text-white">5.0</span>
+                    <span class="text-slate-400">· 11 Google reviews</span>
+                </a>
+                <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/90 border border-slate-700 text-sm font-medium text-slate-300">
+                    <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                    Accepting New Appointments
+                </span>
             </div>
             <h1 class="font-heading text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 animate-on-scroll text-white">
                 Professional Auto Repair <br class="hidden md:block"/>
@@ -284,7 +321,7 @@
                 </div>
                 <div class="relative animate-on-scroll">
                     <div class="aspect-square md:aspect-[4/3] rounded-2xl overflow-hidden bg-brand-card border border-slate-700 relative">
-                        <img src="https://zgnpmogdjnnhpwewavnr.supabase.co/storage/v1/object/public/project-images/28a4057e-8883-43b2-b824-ba922e227604/1773261444127-y5cjn.png" alt="Clean Shop Environment" class="w-full h-full object-cover mix-blend-luminosity opacity-50" loading="lazy" decoding="async">
+                        <img src="images/clean-shop.webp" width="1200" height="800" alt="Clean Shop Environment" class="w-full h-full object-cover mix-blend-luminosity opacity-50" loading="lazy" decoding="async">
                         <div class="absolute inset-0 bg-gradient-to-tr from-brand-dark/80 to-transparent"></div>
                         <div class="absolute bottom-6 left-6 right-6 bg-brand-dark/90 backdrop-blur border border-slate-700 p-6 rounded-xl">
                             <div class="flex items-center gap-4">
@@ -322,24 +359,116 @@
         <div class="max-w-7xl mx-auto pl-6 lg:pl-8 pr-6 lg:pr-0">
             <div id="photo-carousel" class="flex overflow-x-auto space-x-6 pb-8 snap-x no-scrollbar animate-on-scroll">
                 <div class="min-w-[85vw] md:min-w-[400px] h-64 md:h-80 bg-brand-card rounded-xl border border-slate-700 snap-center relative overflow-hidden group">
-                    <img src="https://zgnpmogdjnnhpwewavnr.supabase.co/storage/v1/object/public/project-images/28a4057e-8883-43b2-b824-ba922e227604/1774132084750-1dpyfc.png" alt="Shop Interior" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async">
-                    <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/40 to-transparent opacity-90"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6"><p class="text-slate-300 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Clean and meticulously organized workspace.</p></div>
+                    <img src="images/gallery-1.webp" width="1200" height="800" alt="Shop Interior" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async">
+                    <div class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-brand-dark via-brand-dark/80 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6"><p class="text-slate-200 text-sm font-medium drop-shadow">Clean and meticulously organized workspace.</p></div>
                 </div>
                 <div class="min-w-[85vw] md:min-w-[400px] h-64 md:h-80 bg-brand-card rounded-xl border border-slate-700 snap-center relative overflow-hidden group">
-                    <img src="https://zgnpmogdjnnhpwewavnr.supabase.co/storage/v1/object/public/project-images/28a4057e-8883-43b2-b824-ba922e227604/1774135771590-rygj1i.png" alt="Service Bays" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async">
-                    <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/40 to-transparent opacity-90"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6"><p class="text-slate-300 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">State-of-the-art lifts and tools for precision work.</p></div>
+                    <img src="images/gallery-2.webp" width="1200" height="800" alt="Service Bays" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async">
+                    <div class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-brand-dark via-brand-dark/80 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6"><p class="text-slate-200 text-sm font-medium drop-shadow">State-of-the-art lifts and tools for precision work.</p></div>
                 </div>
                 <div class="min-w-[85vw] md:min-w-[400px] h-64 md:h-80 bg-brand-card rounded-xl border border-slate-700 snap-center relative overflow-hidden group">
-                    <img src="https://zgnpmogdjnnhpwewavnr.supabase.co/storage/v1/object/public/project-images/28a4057e-8883-43b2-b824-ba922e227604/1774135783183-1ige6o.png" alt="Equipment" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async">
-                    <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/40 to-transparent opacity-90"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6"><p class="text-slate-300 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Advanced technology for accurate and reliable repairs.</p></div>
+                    <img src="images/gallery-3.webp" width="1200" height="800" alt="Equipment" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async">
+                    <div class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-brand-dark via-brand-dark/80 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6"><p class="text-slate-200 text-sm font-medium drop-shadow">Advanced technology for accurate and reliable repairs.</p></div>
                 </div>
                 <div class="min-w-[85vw] md:min-w-[400px] h-64 md:h-80 bg-brand-card rounded-xl border border-slate-700 snap-center relative overflow-hidden group">
-                    <img src="https://zgnpmogdjnnhpwewavnr.supabase.co/storage/v1/object/public/project-images/28a4057e-8883-43b2-b824-ba922e227604/1774136998013-mxwm94.png" alt="Shop Exterior" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async">
-                    <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/40 to-transparent opacity-90"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6"><p class="text-slate-300 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Easy to find location with ample customer parking.</p></div>
+                    <img src="images/gallery-4.webp" width="1200" height="800" alt="Shop Exterior" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async">
+                    <div class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-brand-dark via-brand-dark/80 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6"><p class="text-slate-200 text-sm font-medium drop-shadow">Easy to find location with ample customer parking.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- REVIEWS -->
+    <!-- Every quote below is a verbatim, unedited Google review for this shop.
+         Reviewer names are shortened to first name + last initial. Deliberately
+         NOT marked up as schema aggregateRating: Google disallows structured
+         markup of reviews hosted on someone else's platform. -->
+    <section id="reviews" class="py-24 bg-brand-dark border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-14 animate-on-scroll">
+                <p class="text-brand-accent font-semibold tracking-widest uppercase text-sm mb-3">What Our Customers Say</p>
+                <h2 class="font-heading text-4xl md:text-5xl font-bold text-white mb-5">Rated 5.0 on Google</h2>
+                <a href="https://www.google.com/maps/place/?q=place_id:ChIJ2YaQEABTBogRD-cDQ3hDd5Y"
+                   target="_blank" rel="noopener"
+                   class="inline-flex items-center gap-2 text-slate-300 hover:text-white transition-colors">
+                    <span class="text-amber-400 text-lg tracking-tight" aria-hidden="true">★★★★★</span>
+                    <span class="font-semibold text-white">5.0</span>
+                    <span class="text-slate-400">from 11 Google reviews</span>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-on-scroll">
+                <figure class="bg-brand-card border border-slate-700 rounded-xl p-6 flex flex-col">
+                    <div class="text-amber-400 mb-3 tracking-tight" aria-label="5 out of 5 stars">★★★★★</div>
+                    <blockquote class="text-slate-200 leading-relaxed flex-1">
+                        &ldquo;Gave me an honest opinion after thoroughly checking my car. The quote he provided for the required repair was fair.&rdquo;
+                    </blockquote>
+                    <figcaption class="mt-5 pt-4 border-t border-slate-700/70 text-sm">
+                        <span class="text-white font-semibold">Mohammad Q.</span>
+                        <span class="text-slate-500"> · Google review</span>
+                    </figcaption>
+                </figure>
+
+                <figure class="bg-brand-card border border-slate-700 rounded-xl p-6 flex flex-col">
+                    <div class="text-amber-400 mb-3 tracking-tight" aria-label="5 out of 5 stars">★★★★★</div>
+                    <blockquote class="text-slate-200 leading-relaxed flex-1">
+                        &ldquo;Great owner, staff was very professional and nice. Repairs done quickly. Would recommend.&rdquo;
+                    </blockquote>
+                    <figcaption class="mt-5 pt-4 border-t border-slate-700/70 text-sm">
+                        <span class="text-white font-semibold">Musa H.</span>
+                        <span class="text-slate-500"> · Google review</span>
+                    </figcaption>
+                </figure>
+
+                <figure class="bg-brand-card border border-slate-700 rounded-xl p-6 flex flex-col">
+                    <div class="text-amber-400 mb-3 tracking-tight" aria-label="5 out of 5 stars">★★★★★</div>
+                    <blockquote class="text-slate-200 leading-relaxed flex-1">
+                        &ldquo;I greatly appreciate their economical services, w/ friendly promptness &sim; my &lsquo;New Go-to&rsquo; Mechanics&rdquo;
+                    </blockquote>
+                    <figcaption class="mt-5 pt-4 border-t border-slate-700/70 text-sm">
+                        <span class="text-white font-semibold">Jacqueline W.</span>
+                        <span class="text-slate-500"> · Google review</span>
+                    </figcaption>
+                </figure>
+
+                <figure class="bg-brand-card border border-slate-700 rounded-xl p-6 flex flex-col">
+                    <div class="text-amber-400 mb-3 tracking-tight" aria-label="5 de 5 estrellas">★★★★★</div>
+                    <blockquote class="text-slate-200 leading-relaxed flex-1" lang="es">
+                        &ldquo;Excelente trabajo!!! Personas serias y responsables 100% recomendados&rdquo;
+                    </blockquote>
+                    <figcaption class="mt-5 pt-4 border-t border-slate-700/70 text-sm">
+                        <span class="text-white font-semibold">Lewis P.</span>
+                        <span class="text-slate-500"> · Google review</span>
+                    </figcaption>
+                </figure>
+
+                <figure class="bg-brand-card border border-slate-700 rounded-xl p-6 flex flex-col">
+                    <div class="text-amber-400 mb-3 tracking-tight" aria-label="5 de 5 estrellas">★★★★★</div>
+                    <blockquote class="text-slate-200 leading-relaxed flex-1" lang="es">
+                        &ldquo;100% recomendados, buena atenci&oacute;n no dejen de visitarlos&rdquo;
+                    </blockquote>
+                    <figcaption class="mt-5 pt-4 border-t border-slate-700/70 text-sm">
+                        <span class="text-white font-semibold">Karen C.</span>
+                        <span class="text-slate-500"> · Google review</span>
+                    </figcaption>
+                </figure>
+
+                <!-- Leave-a-review card: opens Google's review box for this shop directly -->
+                <div class="bg-gradient-to-br from-slate-800 to-brand-card border border-slate-700 rounded-xl p-6 flex flex-col justify-center text-center">
+                    <div class="text-amber-400 text-2xl mb-3 tracking-tight" aria-hidden="true">★★★★★</div>
+                    <h3 class="text-white font-heading font-bold text-lg mb-2">Been here before?</h3>
+                    <p class="text-slate-400 text-sm mb-5">Your review helps neighbors find an honest shop.</p>
+                    <a href="https://search.google.com/local/writereview?placeid=ChIJ2YaQEABTBogRD-cDQ3hDd5Y"
+                       target="_blank" rel="noopener"
+                       class="inline-flex items-center justify-center gap-2 px-5 py-3 bg-brand-accent hover:bg-brand-accentHover text-white text-sm font-semibold rounded-lg transition-colors">
+                        <i data-lucide="star" class="w-4 h-4"></i>
+                        Leave a Google Review
+                    </a>
                 </div>
             </div>
         </div>
@@ -482,7 +611,7 @@
     <footer class="bg-black py-12 border-t border-slate-800">
         <div class="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="flex items-center gap-3">
-                <img src="images/logo.png" alt="Logo" width="1024" height="1536" loading="lazy" decoding="async" class="h-8 w-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <img src="images/logo.webp" alt="Logo" width="240" height="360" loading="lazy" decoding="async" class="h-8 w-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                 <div class="w-8 h-8 bg-brand-accent rounded items-center justify-center" style="display:none;">
                     <i data-lucide="wrench" class="text-white w-4 h-4"></i>
                 </div>
@@ -502,6 +631,26 @@
         </div>
     </footer>
 
+    <!-- Sticky mobile action bar: on a phone the header CTA is behind the menu,
+         so these stay reachable at every scroll position. Call comes first —
+         most people choosing a mechanic want to talk to someone. -->
+    <div class="md:hidden fixed bottom-0 inset-x-0 z-50 border-t border-slate-700 bg-brand-dark/95 backdrop-blur-md"
+         style="padding-bottom: env(safe-area-inset-bottom);">
+        <div class="grid grid-cols-2 gap-3 px-4 py-3">
+            <a href="tel:608-520-9750"
+               class="inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-lg border border-slate-600 text-white font-semibold text-base active:bg-slate-800 transition-colors">
+                <i data-lucide="phone" class="w-5 h-5"></i>
+                Call
+            </a>
+            <a href="#booking"
+               class="inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-lg bg-brand-accent active:bg-brand-accentHover text-white font-semibold text-base transition-colors">
+                <i data-lucide="calendar-check" class="w-5 h-5"></i>
+                Book
+            </a>
+        </div>
+    </div>
+
+
     <script>
         // Año actual en footer
         document.getElementById('year').textContent = new Date().getFullYear();
@@ -516,6 +665,23 @@
             });
         }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
         document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+        // ---- Mobile menu ----
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        function setMenu(open) {
+            mobileMenu.classList.toggle('hidden', !open);
+            menuToggle.setAttribute('aria-expanded', String(open));
+            menuToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+            menuToggle.innerHTML = `<i data-lucide="${open ? 'x' : 'menu'}" class="w-6 h-6 pointer-events-none"></i>`;
+            lucide.createIcons();
+        }
+        menuToggle.addEventListener('click', () => setMenu(mobileMenu.classList.contains('hidden')));
+        // close after tapping a link, and on Escape
+        mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+        // if the viewport grows past the mobile breakpoint, drop the panel
+        matchMedia('(min-width: 768px)').addEventListener('change', e => { if (e.matches) setMenu(false); });
 
         // ---- Appointment time slots ----
         const SLOT_START   = 8 * 60;        // 8:00 AM in minutes
